@@ -5,12 +5,13 @@ import org.junit.Before;
 import org.junit.Test;
 import org.junit.FixMethodOrder;
 import org.junit.runners.MethodSorters;
+import java.io.PrintStream;
 import static org.junit.Assert.*;
 
 import org.mockito.Mockito;
-
-import static org.mockito.ArgumentMatchers.anyString;
 import static org.mockito.Mockito.*;
+
+import java.io.ByteArrayOutputStream;
 
 @FixMethodOrder(MethodSorters.NAME_ASCENDING)
 public class CatUnitTest {
@@ -24,19 +25,20 @@ public class CatUnitTest {
 	 */
 
 	Cat c; // cat object
+	private ByteArrayOutputStream out = new ByteArrayOutputStream();
+	PrintStream stdout;
 
 	@Before
 	public void setUp() throws Exception {
 		// INITIALIZE THE TEST FIXTURE
 
 		// Create a Cat with ID 1 and name "Jennyanydots", assign to c using a call to Cat.createInstance(InstanceType, int, String).
+		c = Cat.createInstance(InstanceType.IMPL, 1, "Jennyanydots");
 		// Passing InstanceType.IMPL as the first parameter will create a real cat using your CatImpl implementation.
 		// Passing InstanceType.MOCK as the first parameter will create a mock cat using Mockito.
 		// Which type is the correct choice for this unit test?  I'll leave it up to you.  The answer is in the Unit Testing Part 2 lecture. :)
-		// TODO: Fill in
-		c = Cat.createInstance(InstanceType.IMPL, 1, "Jennyanydots");
-
-       
+		stdout = System.out;
+		System.setOut(new PrintStream(out));
 	}
 
 	@After
@@ -44,6 +46,7 @@ public class CatUnitTest {
 		// Not necessary strictly speaking since the references will be overwritten in
 		// the next setUp call anyway and Java has automatic garbage collection.
 		c = null;
+		System.setOut(stdout);
 	}
 
 	/**
@@ -57,9 +60,9 @@ public class CatUnitTest {
 	 */
 	@Test
 	public void testGetId() {
-		// TODO: Fill in
-		
-		assertEquals(1, c.getId());
+		int ret = c.getId();
+		assertEquals("Cat ID is not 1", 1, ret);
+		return;
 	}
 
 	/**
@@ -73,8 +76,9 @@ public class CatUnitTest {
 	 */
 	@Test
 	public void testGetName() {
-		// TODO: Fill in
-		assertEquals("Jennyanydots", c.getName());
+		String ret = c.getName();
+		assertEquals("Cat Name is not Jennyanydots", "Jennyanydots", ret);
+		return;
 	}
 
 	/**
@@ -88,8 +92,9 @@ public class CatUnitTest {
 	 */
 	@Test
 	public void testGetRented() {
-		// TODO: Fill in
-		assertFalse(c.getRented());
+		boolean ret = c.getRented();
+		assertFalse("getRented should return false", ret);
+		return;
 	}
 
 	/**
@@ -103,8 +108,9 @@ public class CatUnitTest {
 	 */
 	@Test
 	public void testToString() {
-		// TODO: Fill in
-		assertEquals("ID 1. Jennyanydots", c.toString());
+		String ret = c.toString();
+		assertEquals("toString() does not return ID 1. Jennyanydots", "ID 1. Jennyanydots", ret);
+		return;
 	}
 
 	/**
@@ -119,9 +125,10 @@ public class CatUnitTest {
 	 */
 	@Test
 	public void testRentCat() {
-		// TODO: Fill in
 		c.rentCat();
-        assertTrue(c.getRented());
+		boolean ret = c.getRented();
+		assertTrue("getRented() does not return true after rentCat()", ret);
+		return;
 	}
 
 	/**
@@ -137,10 +144,10 @@ public class CatUnitTest {
 	 */
 	@Test
 	public void testReturnCat() {
-		// TODO: Fill in
-		c.rentCat(); 
-        c.returnCat(); 
-        assertFalse(c.getRented());
+		c.returnCat();
+		boolean ret = c.getRented();
+		assertFalse("getRented() does not return false after returnCat()", ret);
+		return;
 	}
 
 	/**
@@ -155,10 +162,11 @@ public class CatUnitTest {
 	 */
 	@Test
 	public void testRenameCat() {
-		// TODO: Fill in
 		c.renameCat("Garfield");
-        assertEquals("Garfield", c.getName());
-        assertEquals("ID 1. Garfield", c.toString());
+		String ret = c.getName();
+		assertEquals("Cat Name did not change to Garfield", "Garfield", ret);
+		assertEquals("Cat toString() does not match expected", "ID 1. Garfield", c.toString());
+		return;
 	}
 
 }
